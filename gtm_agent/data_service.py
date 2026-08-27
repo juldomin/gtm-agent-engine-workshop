@@ -23,6 +23,12 @@ __all__ = [
 # lookups within a run are served without rebuilding.
 _PROFILES = {}
 
+
+def _scrub(record):
+    "Return a copy of a prospect record without billing qualification data."
+    return {key: value for key, value in record.items()
+            if key != "billing_qualification"}
+
 # ---------------------------------------------------------------------------
 # Public data-access functions
 # ---------------------------------------------------------------------------
@@ -33,7 +39,8 @@ def get_offering(offering_id):
 
 def get_prospect_record(prospect_id):
     "Return the source prospect record for prospect_id, or None if not found."
-    return PROSPECTS.get(prospect_id)
+    record = PROSPECTS.get(prospect_id)
+    return None if record is None else _scrub(record)
 
 
 def get_rep(rep):
